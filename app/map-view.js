@@ -57,7 +57,8 @@
         var id = ids[i];
         overlays[id] = {
             name: 'Youmapps_'+id,
-            url: 'http://sandbox.youmapps.com/tiles/'+id+'/{z}/{x}/{y}',
+            //url: 'http://sandbox.youmapps.com/tiles/'+id+'/{z}/{x}/{y}',
+            url: '/tiles/'+id+'/{z}/{x}/{y}',
             type: 'xyz',
             layerParams: {
                 showOnSelector: false
@@ -69,10 +70,44 @@
     function initMap($scope) {
         angular.extend($scope, {
             defaults: {
-                minZoom: 12
+                minZoom: 12,
+                maxZoom: 15,
+                fadeAnimation: false
             },
             layers: {
-                overlays: overlays
+                //overlays: overlays
+                /*baselayers: {
+                  main: {
+                    name: 'Youmapps',
+                    //url: 'http://sandbox.youmapps.com/tiles/'+id+'/{z}/{x}/{y}',
+                    url: '/tiles/'+ids[0]+'/{z}/{x}/{y}',
+                    type: 'xyz',
+                    layerParams: {
+                        showOnSelector: false
+                    },
+                    visible: true
+                  }
+                }*/
+                overlays: {
+                  l0: {
+                    name: 'Youmapps-l0',
+                    url: '/tiles/'+ids[0]+'/{z}/{x}/{y}',
+                    type: 'xyz',
+                    layerParams: {
+                        showOnSelector: false
+                    },
+                    visible: true
+                  },
+                  l1: {
+                    name: 'Youmapps-l1',
+                    url: '/tiles/'+ids[1]+'/{z}/{x}/{y}',
+                    type: 'xyz',
+                    layerParams: {
+                        showOnSelector: false
+                    },
+                    visible: true
+                  }
+                }
             },
             maxbounds: {
                 southWest: {
@@ -93,14 +128,21 @@
         $leaflet.getMap('map').then(function(map) {
             $leaflet.getLayers().then(function(layers) {
                 var overlays = layers.overlays;
-                var i = 0, S = ids.length;
+                var i = 2, S = ids.length;
+                var j = 0;
                 
-                window.setInterval(function() {
-                    overlays[ids[i]].bringToFront();
+                function work() {
+                    var back = overlays['l'+j];
+                    var front = overlays['l'+j];
+                    j ^= 1;
+                    
+                    front.bringToFront();
+                    back.setUrl('/tiles/'+ids[i]+'/{z}/{x}/{y}');
                     
                     if (++i == S)
                         i = 0;
-                }, 500);
+                }
+                setInterval(work, 200);
             });
         });
     }

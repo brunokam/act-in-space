@@ -1,4 +1,7 @@
 # Directories
 /.idea/
 /bower_components/
-/tiles
+/tiles/
+
+# Files
+.DS_Store

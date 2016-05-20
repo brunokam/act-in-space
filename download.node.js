@@ -63,7 +63,7 @@ const z_length = z_max - z_min + 1;
 
 function start(min, max, z) {
   const scale = Math.pow(2, z_max - z);
-  return Math.ceil(min / scale);
+  return Math.floor(min / scale);
 }
 
 function end(min, max, z) {
@@ -134,11 +134,15 @@ const queue = [];
 
 function download_y(id, z, x, y) {
   //console.log(`download y: ${id}/${z}/${x}/${y}`);
-  queue.push(function() {
-    return new Promise((resolve, reject) => {
-      download(api_link_raw(id, z, x, y)).pipe(fs.createWriteStream(y_file(id, z, x, y))).on('finish', () => {
-        console.log(`DONE: ${id}/${z}/${x}/${y}`);
-        resolve();
+  fs.stat(y_file(id, z, x, y), function(err) {
+    if (!err)
+      return;
+    queue.push(function() {
+      return new Promise((resolve, reject) => {
+        download(api_link_raw(id, z, x, y)).pipe(fs.createWriteStream(y_file(id, z, x, y))).on('finish', () => {
+          console.log(`DONE: ${id}/${z}/${x}/${y}`);
+          resolve();
+        });
       });
     });
   });

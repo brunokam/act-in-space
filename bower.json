@@ -1,0 +1,32 @@
+{
+  "name": "mapbox-app-starter",
+  "homepage": "https://github.com/brunokam/mapbox-app-starter",
+  "authors": [
+    "Mateusz Bruno-Kaminski <m.bruno.kaminski@gmail.com>"
+  ],
+  "description": "Starter for an app, which requires interactive map.",
+  "main": "app/app.js",
+  "keywords": [
+    "mapbox",
+    "starter",
+    "hackaton"
+  ],
+  "license": "proprietary",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^2.2.3",
+    "angular": "^1.5.4",
+    "angular-route": "^1.5.3",
+    "bootstrap": "^3.3.6",
+    "angular-leaflet-directive": "^0.10.0"
+  },
+  "resolutions": {
+    "angular": "1.5.3"
+  }
+}

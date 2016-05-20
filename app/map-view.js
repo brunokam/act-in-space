@@ -51,43 +51,15 @@
         'DS_PHR1A_201309231104180_FR1_PX_E001N43_0615_01728',
         'DS_PHR1A_201307091049344_FR1_PX_E001N43_0615_01654'
     ].reverse();
-    
-    var overlays = {};
-    for (var i = 0, S = ids.length; i < S; ++i) {
-        var id = ids[i];
-        overlays[id] = {
-            name: 'Youmapps_'+id,
-            //url: 'http://sandbox.youmapps.com/tiles/'+id+'/{z}/{x}/{y}',
-            url: '/tiles/'+id+'/{z}/{x}/{y}',
-            type: 'xyz',
-            layerParams: {
-                showOnSelector: false
-            },
-            visible: true
-        };
-    }
 
     function initMap($scope) {
         angular.extend($scope, {
             defaults: {
                 minZoom: 12,
-                maxZoom: 15,
+                maxZoom: 16,
                 fadeAnimation: false
             },
             layers: {
-                //overlays: overlays
-                /*baselayers: {
-                  main: {
-                    name: 'Youmapps',
-                    //url: 'http://sandbox.youmapps.com/tiles/'+id+'/{z}/{x}/{y}',
-                    url: '/tiles/'+ids[0]+'/{z}/{x}/{y}',
-                    type: 'xyz',
-                    layerParams: {
-                        showOnSelector: false
-                    },
-                    visible: true
-                  }
-                }*/
                 overlays: {
                   l0: {
                     name: 'Youmapps-l0',
@@ -122,27 +94,98 @@
         });
     }
 
+    var tileLoader = (function(){
+        var overlays = null;
+        var bufferId = 0;
+        var frontId = '';
+        var backId = '';
+        var preloadId = '';
+        var preloadPromise = null;
+        
+        function url(id) {
+            return '/tiles/'+id+'/{z}/{x}/{y}';
+        }
+        
+        function setOverlays(o) {
+            overlays = [o.l0, o.l1];
+        }
+        
+        function preload(id) {
+            var back = overlays[bufferId^1];
+            preloadId = id;
+            preloadPromise = new Promise(function(resolve, reject) {
+                back.setUrl(url(id));
+                back.addEventListener('load', onload);
+                
+                function onload() {
+                    back.removeEventListener('load', onload);
+                    if (preloadId != id)
+                        return;
+                    
+                    preloadId = '';
+                    backId = id;
+                    resolve();
+                }
+            });
+        }
+        
+        function flip() {
+            bufferId ^= 1;
+            overlays[bufferId].bringToFront();
+        }
+        
+        function load(id) {
+            if (id == frontId)
+                return Promise.resolve();
+            
+            if (id == backId) {
+                flip();
+                return Promise.resolve();
+            }
+            
+            if (id != preloadId)
+                preload(id);
+            
+            return preloadPromise.then(flip);
+        }
+        
+        return {
+            setOverlays: setOverlays,
+            preload: preload,
+            load: load
+        };
+    })();
+
     function mapViewController($scope, $leaflet) {
         initMap($scope);
         
         $leaflet.getMap('map').then(function(map) {
             $leaflet.getLayers().then(function(layers) {
                 var overlays = layers.overlays;
-                var i = 2, S = ids.length;
-                var j = 0;
+                tileLoader.setOverlays(overlays);
+                var i = 1, S = ids.length;
+                //var j = 0;
                 
                 function work() {
-                    var back = overlays['l'+j];
-                    var front = overlays['l'+j];
-                    j ^= 1;
+                    //var back = overlays['l'+j];
+                    //var front = overlays['l'+j];
+                    //j ^= 1;
                     
-                    front.bringToFront();
-                    back.setUrl('/tiles/'+ids[i]+'/{z}/{x}/{y}');
+                    //front.bringToFront();
+                    //back.setUrl('/tiles/'+ids[i]+'/{z}/{x}/{y}');
                     
-                    if (++i == S)
-                        i = 0;
+                    tileLoader.load(ids[i]).then(function() {
+                        if (++i == S)
+                            i = 0;
+                        tileLoader.preload(ids[i]);
+                        setTimeout(work, 500);
+                    });
+                    
+                    //if (++i == S)
+                    //    i = 0;
                 }
-                setInterval(work, 200);
+                //setInterval(work, 200);
+                work();
             });
         });
     }

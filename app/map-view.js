@@ -6,12 +6,25 @@
 
 (function () {
 
+    var mapLayer = {
+        name: 'Youmapps',
+        url: 'http://sandbox.youmapps.com/tiles/DS_PHR1A_201604111052119_FR1_PX_E001N43_0615_01712/{z}/{x}/{y}',
+        type: 'xyz',
+        layerParams: {
+            showOnSelector: false
+        }
+    };
+
     function initMap($scope) {
         angular.extend($scope, {
-            // center: {
-            //     autoDiscover: true,
-            //     zoom: 13
-            // },
+            defaults: {
+                minZoom: 12
+            },
+            layers: {
+                baselayers: {
+                    streets: mapLayer
+                }
+            },
             maxbounds: {
                 southWest: {
                     lat: 43.5107129908437,
@@ -21,9 +34,6 @@
                     lat: 43.69270087644112,
                     lng: 1.550445556640625
                 }
-            },
-            defaults: {
-                minZoom: 12
             }
         });
     }

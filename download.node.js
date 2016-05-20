@@ -148,6 +148,7 @@ for (const id of ids)
   download_id(id);
 //download_id(ids[0]);
 
+setTimeout(() => {
 console.log(queue.length);
 
 function thread() {
@@ -160,3 +161,4 @@ function thread() {
 
 for (let i = 0; i < 30; ++i)
   thread();
+}, 10000);

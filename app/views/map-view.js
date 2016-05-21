@@ -86,6 +86,7 @@
                     }
                 }
             },
+            markers: {},
             maxbounds: {
                 southWest: {
                     lat: 43.5107129908437,
@@ -120,10 +121,12 @@
                         return dates[i];
                     }
                 });
+
                 $timeLapse.init(ids, $scope.slider);
-                
-                $scope.lapse = $("#time-lapse");
-                $scope.lapse.on('click', function(e) {
+
+                $scope.lapse = $('#time-lapse');
+
+                $scope.lapse.on('click', function (e) {
                     var active = $scope.lapse.hasClass('active');
                     if (!active) {
                         $timeLapse.start();
@@ -141,7 +144,8 @@
 
                     $tileLoader.load(ids[newValue]);
                 });
-                $scope.slider.on('slideStart', function(e) {
+
+                $scope.slider.on('slideStart', function (e) {
                     var active = $scope.lapse.hasClass('active');
                     if (active)
                         $scope.lapse.click();
@@ -154,7 +158,37 @@
                 });
 
                 $layerLoader.getSubstructure().then(function (layer) {
-                    angular.extend($scope.layers.overlays, layer);
+                    angular.extend($scope.layers.overlays, {
+                        substructure: layer
+                    });
+                });
+
+                $layerLoader.getAnomaly().then(function (layer) {
+                    angular.extend($scope.layers.overlays, {
+                        anomaly: layer
+                    });
+                });
+
+                $layerLoader.getAlert().then(function (data) {
+                    angular.extend($scope.layers.overlays, {
+                        alert: data.layer
+                    });
+                    angular.extend($scope.markers, data.markers);
+                });
+
+                $('#substructure-checkbox').change(function (e) {
+                    $scope.layers.overlays.substructure.visible = $(this).is(':checked');
+                    $scope.$apply();
+                });
+
+                $('#anomaly-checkbox').change(function (e) {
+                    $scope.layers.overlays.anomaly.visible = $(this).is(':checked');
+                    $scope.$apply();
+                });
+
+                $('#alert-checkbox').change(function (e) {
+                    $scope.layers.overlays.alert.visible = $(this).is(':checked');
+                    $scope.$apply();
                 });
             }
         ]);

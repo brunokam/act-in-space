@@ -8,6 +8,10 @@ html, body {
     height: 100%;
 }
 
+ul {
+    list-style-type: none;
+}
+
 .full-height {
     height: 100%;
 }
@@ -38,5 +42,15 @@ html, body {
     z-index: 1000;
     bottom: 30px;
     left: 15px;
-    /*box-shadow: 0 1px 5px rgba(0, 0, 0, 0.65);*/
+}
+
+#layer-checkboxes {
+    position: absolute;
+    z-index: 1000;
+    left: 10px;
+    top: 90px;
+    background-color: #fff;
+    padding: 5px 15px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.65);
+    border-radius: 4px;
 }

@@ -40,7 +40,7 @@ ul {
 #slider {
     position: absolute;
     z-index: 1000;
-    bottom: 30px;
+    bottom: 75px;
     left: 15px;
 }
 
@@ -53,4 +53,11 @@ ul {
     padding: 5px 15px;
     box-shadow: 0 1px 5px rgba(0, 0, 0, 0.65);
     border-radius: 4px;
+}
+
+#time-lapse {
+    position: absolute;
+    z-index: 1000;
+    bottom: 20px;
+    left: 10px;
 }

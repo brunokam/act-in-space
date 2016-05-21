@@ -15,6 +15,7 @@
             var backId = '';
             var preloadId = '';
             var preloadPromise = null;
+            var seq = 0;
 
             function url(id) {
                 return '/tiles/' + id + '/{z}/{x}/{y}';
@@ -44,12 +45,16 @@
             }
 
             function flip() {
+                if (lseq < seq)
+                    return;
+
                 overlays[bufferId].setZIndex(0);
                 bufferId ^= 1;
                 overlays[bufferId].setZIndex(1);
             }
 
             function load(id) {
+                var lseq = ++seq;
                 if (id == frontId)
                     return Promise.resolve();
 
@@ -61,7 +66,7 @@
                 if (id != preloadId)
                     preload(id);
 
-                return preloadPromise.then(flip);
+                return preloadPromise.then(flip.bind(null, lseq));
             }
 
             this.setOverlays = setOverlays;

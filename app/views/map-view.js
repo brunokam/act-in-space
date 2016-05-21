@@ -61,7 +61,7 @@
         angular.extend($scope, {
             defaults: {
                 minZoom: 12,
-                maxZoom: 16,
+                maxZoom: 15,
                 fadeAnimation: false
             },
             layers: {

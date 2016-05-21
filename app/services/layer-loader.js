@@ -84,7 +84,10 @@
                                 layer: {
                                     type: 'group',
                                     name: 'alert',
-                                    visible: false
+                                    visible: false,
+                                    layerParams: {
+                                        showOnSelector: false
+                                    }
                                 },
                                 markers: markers
                             });

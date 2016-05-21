@@ -36,7 +36,14 @@ html, body {
 #slider {
     position: absolute;
     z-index: 1000;
-    bottom: 30px;
+    bottom: 75px;
     left: 15px;
     /*box-shadow: 0 1px 5px rgba(0, 0, 0, 0.65);*/
+}
+
+#time-lapse {
+    position: absolute;
+    z-index: 1000;
+    bottom: 20px;
+    left: 10px;
 }

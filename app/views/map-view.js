@@ -52,6 +52,11 @@
         'DS_PHR1A_201307091049344_FR1_PX_E001N43_0615_01654'
     ].reverse();
 
+    var dates = ids.map(function (id) {
+        var m = id.match(/^DS_PHR1A_(\d{4})(\d{2})(\d{2})/);
+        return m[1] + '/' + m[2] + '/' + m[3];
+    });
+
     function initMap($scope) {
         angular.extend($scope, {
             defaults: {
@@ -102,6 +107,24 @@
             function ($scope, $leaflet, $tileLoader) {
                 initMap($scope);
 
+                $scope.slider = $("#slider-init").slider({
+                    id: 'slider',
+                    min: 0,
+                    max: ids.length - 1,
+                    orientation: 'vertical',
+                    value: 0,
+                    reversed: true,
+                    formatter: function (i) {
+                        return dates[i];
+                    }
+                });
+
+                $scope.slider.on('change', function (e) {
+                    var newValue = e.value.newValue;
+
+                    $tileLoader.load(ids[newValue]);
+                });
+
                 $leaflet.getMap('map').then(function (map) {
                     $leaflet.getLayers().then(function (layers) {
                         var overlays = layers.overlays;
@@ -129,9 +152,11 @@
                         }
 
                         //setInterval(work, 200);
-                        work();
+                        // work();
                     });
                 });
+
+
             }
         ]);
 })();

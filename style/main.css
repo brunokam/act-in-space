@@ -11,3 +11,32 @@ html, body {
 .full-height {
     height: 100%;
 }
+
+#right-sidebar {
+    position: fixed;
+    opacity: 0;
+    width: 400px;
+    background-color: #fff;
+    top: 0;
+    right: -100px;
+    padding: 0 !important;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    overflow-x: hidden;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+#right-sidebar-title {
+    font-weight: bold;
+    font-size: 25px;
+    color: #337ab7;
+    line-height: 1.1;
+}
+
+#slider {
+    position: absolute;
+    z-index: 1000;
+    bottom: 30px;
+    left: 15px;
+    /*box-shadow: 0 1px 5px rgba(0, 0, 0, 0.65);*/
+}

@@ -44,7 +44,7 @@
                 });
             }
 
-            function flip() {
+            function flip(lseq) {
                 if (lseq < seq)
                     return;
 

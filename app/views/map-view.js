@@ -102,9 +102,10 @@
     angular.module('actinspace')
         .controller('MapViewController', [
             '$scope',
+            '$http',
             'leafletData',
             'TileLoader',
-            function ($scope, $leaflet, $tileLoader) {
+            function ($scope, $http, $leaflet, $tileLoader) {
                 initMap($scope);
 
                 $scope.slider = $("#slider-init").slider({
@@ -156,7 +157,24 @@
                     });
                 });
 
-
+                $http.get("substructure/example.geojson").success(function (data, status) {
+                    angular.extend($scope.layers.overlays, {
+                        substructure: {
+                            name: 'Substructure',
+                            type: 'geoJSONShape',
+                            data: data,
+                            visible: true,
+                            layerParams: {
+                                showOnSelector: false
+                            },
+                            layerOptions: {
+                                style: function (feature) {
+                                    return feature.properties;
+                                }
+                            }
+                        }
+                    });
+                });
             }
         ]);
 })();

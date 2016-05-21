@@ -44,8 +44,9 @@
             }
 
             function flip() {
+                overlays[bufferId].setZIndex(0);
                 bufferId ^= 1;
-                overlays[bufferId].bringToFront();
+                overlays[bufferId].setZIndex(1);
             }
 
             function load(id) {

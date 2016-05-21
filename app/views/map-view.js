@@ -105,7 +105,8 @@
             '$http',
             'leafletData',
             'TileLoader',
-            function ($scope, $http, $leaflet, $tileLoader) {
+            'TimeLapse',
+            function ($scope, $http, $leaflet, $tileLoader, $timeLapse) {
                 initMap($scope);
 
                 $scope.slider = $("#slider-init").slider({
@@ -119,41 +120,36 @@
                         return dates[i];
                     }
                 });
+                $timeLapse.init(ids, $scope.slider);
+                
+                $scope.lapse = $("#time-lapse");
+                $scope.lapse.on('click', function(e) {
+                    var active = $scope.lapse.hasClass('active');
+                    if (!active) {
+                        $timeLapse.start();
+                        $scope.lapse.removeClass('btn-default');
+                        $scope.lapse.addClass('btn-success');
+                    } else {
+                        $timeLapse.stop();
+                        $scope.lapse.removeClass('btn-success');
+                        $scope.lapse.addClass('btn-default');
+                    }
+                });
 
                 $scope.slider.on('change', function (e) {
                     var newValue = e.value.newValue;
 
                     $tileLoader.load(ids[newValue]);
                 });
+                $scope.slider.on('slideStart', function(e) {
+                    var active = $scope.lapse.hasClass('active');
+                    if (active)
+                        $scope.lapse.click();
+                });
 
                 $leaflet.getMap('map').then(function (map) {
                     $leaflet.getLayers().then(function (layers) {
-                        var overlays = layers.overlays;
-                        $tileLoader.setOverlays(overlays);
-                        var i = 1, S = ids.length;
-                        //var j = 0;
-
-                        function work() {
-                            //var back = overlays['l'+j];
-                            //var front = overlays['l'+j];
-                            //j ^= 1;
-
-                            //front.bringToFront();
-                            //back.setUrl('/tiles/'+ids[i]+'/{z}/{x}/{y}');
-
-                            $tileLoader.load(ids[i]).then(function () {
-                                if (++i == S)
-                                    i = 0;
-                                $tileLoader.preload(ids[i]);
-                                setTimeout(work, 500);
-                            });
-
-                            //if (++i == S)
-                            //    i = 0;
-                        }
-
-                        //setInterval(work, 200);
-                        // work();
+                        $tileLoader.setOverlays(layers.overlays);
                     });
                 });
 

@@ -104,7 +104,7 @@ function download_id(id) {
       console.error(''+err);
       return;
     }
-    for (let z = 10; z < 16; ++z)
+    for (let z = 17; z < 18; ++z)
       download_z(id, z);
 });}
 
@@ -163,6 +163,6 @@ function thread() {
   task().then(thread);
 }
 
-for (let i = 0; i < 30; ++i)
+for (let i = 0; i < 50; ++i)
   thread();
-}, 10000);
+}, 30000);

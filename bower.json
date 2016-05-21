@@ -27,7 +27,8 @@
     "angular-leaflet-directive": "^0.10.0",
     "seiyria-bootstrap-slider": "^7.0.3",
     "awesome-bootstrap-checkbox": "^0.3.7",
-    "font-awesome": "^4.6.3"
+    "font-awesome": "^4.6.3",
+    "chartist": "^0.9.7"
   },
   "resolutions": {
     "angular": "1.5.3"

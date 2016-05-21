@@ -198,6 +198,38 @@
 
                 $scope.$on('leafletDirectiveMarker.map.click', function (event, args) {
                     $layout.openRightSidebar();
+
+                    var X = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+
+
+                    new Chartist.Line('#chart1', {
+                        labels: X,
+                        series: [
+                            X.map(function (x) {
+                                x /= 6;
+                                return Math.exp(x) + (Math.random() * 1.5 - 0.75);
+                            })
+                        ]
+                    }, {
+                        fullWidth: true,
+                        chartPadding: {
+                            right: 40
+                        }
+                    });
+
+                    new Chartist.Line('#chart2', {
+                        labels: X,
+                        series: [
+                            X.map(function (x) {
+                                return Math.pow(x, 1.5) * 1000 + 140000;
+                            })
+                        ]
+                    }, {
+                        fullWidth: true,
+                        chartPadding: {
+                            right: 40
+                        }
+                    });
                 });
 
                 $scope.$on('leafletDirectiveMap.map.click', function (event, args) {

@@ -41,6 +41,15 @@ ul {
     text-align: center;
 }
 
+.right-sidebar-info {
+    font-weight: bold;
+    text-align: center;
+}
+
+.right-sidebar-chart {
+    margin-top: 30px;
+}
+
 #slider {
     position: absolute;
     z-index: 1000;

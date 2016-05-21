@@ -3,3 +3,4 @@
 
 # Ignore PNG files
 *.png binary
+*.tar.gz binary

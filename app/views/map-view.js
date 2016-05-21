@@ -6,6 +6,13 @@
 
 (function () {
 
+    function range(s) {
+        var a = new Array(s);
+        for (var i = 0; i < s; ++i)
+            a[i] = i;
+        return a;
+    }
+
     var ids = [
         'DS_PHR1A_201604111052119_FR1_PX_E001N43_0615_01712',
         'DS_PHR1A_201603301044531_FR1_PX_E001N43_0615_01728',
@@ -83,6 +90,19 @@
                             showOnSelector: false
                         },
                         visible: true
+                    },
+                    substructure: {
+                        name: 'Substructure',
+                        type: 'geoJSONShape',
+                        visible: false,
+                        layerParams: {
+                            showOnSelector: false
+                        },
+                        layerOptions: {
+                            style: function (feature) {
+                                return feature.properties;
+                            }
+                        }
                     }
                 }
             },
@@ -140,11 +160,73 @@
                         $scope.lapse.addClass('btn-default');
                     }
                 });
+                
+                
+                var $substructureChanger = (function() {
+                    var substructure = null;
+                    var jsons = null;
+                    var visible = false;
+                    var lastIndex = 0;
+                    var loadedIndex = -1;
+
+                    function setSubstructure(s) {
+                        substructure = s;
+                    }
+
+                    function setJsons(j) {
+                        jsons = j;
+                    }
+
+                    function changeVisible(v) {
+                        visible = v;
+                        $scope.layers.overlays.substructure.visible = visible;
+                        $scope.$apply();
+                    }
+
+                    function load(index) {
+                        if (jsons && substructure && index != loadedIndex) {
+                            loadedIndex = index;
+
+                            substructure.clearLayers();
+                            substructure.addData(jsons[loadedIndex]);
+                        }
+                    }
+
+                    function show() {
+                        if (visible)
+                            return;
+
+                        changeVisible(true);
+                        load(lastIndex);
+                    }
+
+                    function hide() {
+                        if (visible)
+                            changeVisible(false);
+                    }
+
+                    function changeIndex(index) {
+                        lastIndex = index;
+                        if (visible)
+                            load(lastIndex);
+                    }
+
+                    return {
+                        setJsons: setJsons,
+                        setSubstructure: setSubstructure,
+                        show: show,
+                        hide: hide,
+                        changeIndex: changeIndex
+                    };
+                })();
 
                 $scope.slider.on('change', function (e) {
                     var newValue = e.value.newValue;
-
                     $tileLoader.load(ids[newValue]);
+                });
+
+                $tileLoader.addOnLoad(function(id) {
+                    $substructureChanger.changeIndex(ids.indexOf(id));
                 });
 
                 $scope.slider.on('slideStart', function (e) {
@@ -156,13 +238,14 @@
                 $leaflet.getMap('map').then(function (map) {
                     $leaflet.getLayers().then(function (layers) {
                         $tileLoader.setOverlays(layers.overlays);
+                        $substructureChanger.setSubstructure(layers.overlays.substructure);
                     });
                 });
 
-                $layerLoader.getSubstructure().then(function (layer) {
-                    angular.extend($scope.layers.overlays, {
-                        substructure: layer
-                    });
+                Promise.all(range(ids.length).map(function(index) {
+                    return $layerLoader.getSubstructureData(index);
+                })).then(function (jsons) {
+                    $substructureChanger.setJsons(jsons);
                 });
 
                 $layerLoader.getAnomaly().then(function (layer) {
@@ -179,8 +262,10 @@
                 });
 
                 $('#substructure-checkbox').change(function (e) {
-                    $scope.layers.overlays.substructure.visible = $(this).is(':checked');
-                    $scope.$apply();
+                    if ($(this).is(':checked'))
+                        $substructureChanger.show();
+                    else
+                        $substructureChanger.hide();
                 });
 
 

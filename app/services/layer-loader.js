@@ -9,25 +9,14 @@
     angular.module('actinspace')
         .service('LayerLoader', ['$http', function ($http) {
 
-            this.getSubstructure = function () {
+            this.getSubstructureData = function (t) {
                 return new Promise(function (resolve, reject) {
 
-                    $http.get('substructure/example.geojson').success(function (data, status) {
+                    var url = 'substructure/example_t' + t + '.geojson';
+
+                    $http.get(url).success(function (data, status) {
                         if (status == 200) {
-                            resolve({
-                                name: 'Substructure',
-                                type: 'geoJSONShape',
-                                data: data,
-                                visible: false,
-                                layerParams: {
-                                    showOnSelector: false
-                                },
-                                layerOptions: {
-                                    style: function (feature) {
-                                        return feature.properties;
-                                    }
-                                }
-                            });
+                            resolve(data);
                         } else {
                             reject(new Error(status));
                         }

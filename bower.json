@@ -24,7 +24,8 @@
     "angular": "^1.5.4",
     "angular-route": "^1.5.3",
     "bootstrap": "^3.3.6",
-    "angular-leaflet-directive": "^0.10.0"
+    "angular-leaflet-directive": "^0.10.0",
+    "seiyria-bootstrap-slider": "^7.0.3"
   },
   "resolutions": {
     "angular": "1.5.3"

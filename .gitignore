@@ -2,6 +2,7 @@
 /.idea/
 /bower_components/
 /tiles/
+/substructure/
 
 # Files
 .DS_Store

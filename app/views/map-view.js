@@ -104,10 +104,12 @@
         .controller('MapViewController', [
             '$scope',
             'leafletData',
+            'leafletMarkerEvents',
             'TileLoader',
             'TimeLapse',
             'LayerLoader',
-            function ($scope, $leaflet, $tileLoader, $timeLapse, $layerLoader) {
+            'Layout',
+            function ($scope, $leaflet, $leafletMarkerEvents, $tileLoader, $timeLapse, $layerLoader, $layout) {
                 initMap($scope);
 
                 $scope.slider = $("#slider-init").slider({
@@ -181,14 +183,25 @@
                     $scope.$apply();
                 });
 
+
                 $('#anomaly-checkbox').change(function (e) {
                     $scope.layers.overlays.anomaly.visible = $(this).is(':checked');
                     $scope.$apply();
                 });
 
+
                 $('#alert-checkbox').change(function (e) {
                     $scope.layers.overlays.alert.visible = $(this).is(':checked');
                     $scope.$apply();
+                });
+
+
+                $scope.$on('leafletDirectiveMarker.map.click', function (event, args) {
+                    $layout.openRightSidebar();
+                });
+
+                $scope.$on('leafletDirectiveMap.map.click', function (event, args) {
+                    $layout.closeRightSidebar();
                 });
             }
         ]);

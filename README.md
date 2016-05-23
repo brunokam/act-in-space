@@ -6,7 +6,7 @@ bower install
 python -m SimpleHTTPServer 8000
 ```
 
-Then navigation to http://localhost:8000
+Then navigate to http://localhost:8000
 
 ##### If you don't have `bower` installed
 ```bash
